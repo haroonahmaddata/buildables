@@ -3,7 +3,7 @@
 A powerful web application for text analysis, summarization, and cost estimation using various language models.
 
 ## Author
-Haroon Ahmad
+Haroon Ahmad @Buildables
 
 ## Features
 
