@@ -21,10 +21,6 @@ venv/
 # Node (if present)
 node_modules/
 
-# Chainlit cache/state (keep config)
-.chainlit/*
-!.chainlit/config.toml
-
 # Public artifacts you DON'T want to commit by accident
 outputs/
 checkpoints/
@@ -58,8 +54,4 @@ Thumbs.db
 *.tar
 *.zip
 *.h5
-.env
 
-# Ignore Codeium and Vim-related files
-.codeium/
-.viminfo
