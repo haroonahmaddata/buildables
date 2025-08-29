@@ -1,0 +1,65 @@
+# ---------- Python / general ----------
+__pycache__/
+*.py[cod]
+*.log
+*.sqlite*
+*.db
+.DS_Store
+
+# venvs
+.venv/
+venv/
+.envrc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editors/IDE
+.vscode/
+.idea/
+
+# Node (if present)
+node_modules/
+
+# Chainlit cache/state (keep config)
+.chainlit/*
+!.chainlit/config.toml
+
+# Public artifacts you DON'T want to commit by accident
+outputs/
+checkpoints/
+artifacts/
+tmp/
+logs/
+
+# Environment / secrets
+.env
+.env.*
+*.env
+*.key
+*.pem
+*credentials*.json
+service-account*.json
+secrets/
+*.pkl
+
+
+# Data
+data/
+datasets/
+
+# OS / misc
+Thumbs.db
+
+# Git LFS (optional big binaries; use LFS instead of plain git)
+*.pt
+*.bin
+*.model
+*.tar
+*.zip
+*.h5
+.env
+
+# Ignore Codeium and Vim-related files
+.codeium/
+.viminfo
