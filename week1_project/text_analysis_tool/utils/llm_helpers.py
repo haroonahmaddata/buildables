@@ -1,6 +1,5 @@
 import os
 import time
-import openai
 import google.generativeai as genai
 from google.api_core import exceptions
 from openai import OpenAI, OpenAIError

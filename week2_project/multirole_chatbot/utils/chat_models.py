@@ -1,7 +1,5 @@
-import os
 import openai
 import google.generativeai as genai
-from openai.types import model
 
 class ChatModel:
     """A class to encapsulate chat model interactions with different APIs.

@@ -1,5 +1,5 @@
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List
 from nltk.tokenize import word_tokenize
 from transformers import AutoTokenizer
 from config import ModelCosts

@@ -1,13 +1,12 @@
 import streamlit as st
-import os
-import sys
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+import os
 
 # --- Imports from your project ---
 # Import ChatModel from utils.chat_models
 from utils.chat_models import ChatModel
 # Import core chat functions from utils.chat_core
-from chat_core import load_system_prompt_content, get_ai_response_for_chat
+from chat_core import load_system_prompt_content
 import config # Your config.py
 
 # --- Configuration & Path Setup ---
@@ -44,7 +43,7 @@ def export_chat_history_as_text():
 
 # --- Streamlit App Setup ---
 st.set_page_config(page_title="🦜MittuChat", layout="centered")
-st.title(" 🦜MittuChat Multirole AI Chatbot")
+st.title(" 🦜MittuChat Multi-Role AI Chatbot")
 st.markdown("### AI interactions with customizable personas and models.")
 st.markdown("---")
 
@@ -61,7 +60,7 @@ if "model" not in st.session_state:
     try:
         st.session_state.model = ChatModel(config.OPENAI_API_KEY, config.GEMINI_API_KEY)
     except AttributeError:
-        st.warning("Could not get API keys from config.py. Falling back to environment variables.")
+        st.warning("Could not get API keys. Falling back to environment variables.")
         openai_api = os.getenv("OPENAI_API_KEY")
         gemini_api = os.getenv("GEMINI_API_KEY")
         st.session_state.model = ChatModel(openai_api, gemini_api)
