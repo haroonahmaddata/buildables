@@ -1,8 +1,5 @@
 from langchain_core.messages import HumanMessage
 import os
-# Assume ChatModel and config are imported from utils and config module
-# Or passed as arguments
-
 PROMPTS_BASE_DIR = os.path.join(os.path.dirname(__file__), "prompts")
 
 def load_system_prompt_content(persona_file_name: str) -> str:
