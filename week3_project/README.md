@@ -1,4 +1,3 @@
-```markdown
 # Large Language Model Reasoning Evaluation
 
 This repository contains the results and justification for an evaluation of a Large Language Model's reasoning capabilities across different task types and prompting methods. The goal of this analysis is to determine the most effective method for generating accurate, clear, and complete responses.
@@ -48,4 +47,3 @@ The scores are based on a rubric that evaluates four key criteria:
 *   **Zero-Shot and Few-Shot** prompting methods, which produce short answers, scored a **7**. While correct and concise, they lacked the clarity and completeness necessary for top performance.
 *   **Chain-of-Thought (CoT)** prompting methods performed the best, demonstrating the value of a step-by-step reasoning process. **Logic CoT** and **Math Zero-Shot** (which implicitly used a detailed reasoning process) achieved a perfect **12**.
 *   The **Math CoT** response, while good, shows that a less structured explanation can still impact the overall score.
-```
