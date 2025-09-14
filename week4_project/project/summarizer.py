@@ -1,0 +1,172 @@
+import google.generativeai as genai
+from google.api_core import exceptions
+from groq import Groq
+from dotenv import load_dotenv
+import os
+import time
+
+load_dotenv()
+
+article = """Recently, the first of 250 migrants who tried to move illegally to the United States were deported to the central African country of Rwanda.  
+Rwandan officials say they accepted them because they understand their situation. 
+“Rwanda has agreed with the United States to accept up to 250 migrants, in part because nearly every Rwandan family has experienced the hardships of displacement, and our societal values are founded on reintegration and rehabilitation,” Rwandan government spokesperson, Yolande Makolo, told Reuters. “Those approved (for resettlement) will be provided with workforce training, healthcare, and accommodation support to jumpstart their lives in Rwanda, giving them the opportunity to contribute to one of the fastest-growing economies in the world over the last decade.”  
+Still, countries that accept migrants from the US and elsewhere are being compensated for their trouble: The program, part of President Donald Trump’s pledge to prevent illegal immigration in the US, is also an example of a booming new business. 
+As the BBC reported, numerous developing countries worldwide have agreed to take migrants from wealthier nations that have chosen to pay others to handle those individuals who have left their homes in search of safety or better economic opportunities. 
+For example, El Salvador has imprisoned Venezuelan citizens deported from the US. American taxpayers paid the country around $6 million for the resettlement, according to National Public Radio. 
+The US has also expelled individuals to Eswatini and South Sudan, the latter a war-torn nation on the brink of another war. Lawyers for those individuals have complained that they have been thrown in jail in their new host countries without due process and live in dire conditions.  
+Some are being deported even when their countries of origin are willing to take them back. For example, Jamaican national Orville Etoria was “inexplicably and illegally” sent to Eswatini when Jamaica said it would accept him back, the New York-based Legal Aid Society told the Los Angeles Times. Etoria and other men from Laos and Vietnam have been refused visitation by their local attorneys.  
+Rwanda hasn’t disclosed how much the US has paid to accept the migrants. But the US recently paid the country $100,000 to take a single Iraqi deportee. 
+The US isn’t alone in its offshoring. 
+Australia is paying the tiny Oceanic nation of Nauru $267 million in a lump sum as well as $46 million annually to take migrants, the Associated Press noted. 
+Three years ago, the United Kingdom attempted to send asylum seekers to Rwanda. The plan fizzled, however, after British courts found that it violated human rights laws. The British spent hundreds of millions of dollars on the plan. Now, Rwandan officials insist they are not required to pay the money back. 
+British Prime Minister Sir Keir Starmer is now thinking of new ways to offshore migrants, according to a London School of Economics blog. 
+Meanwhile, Italy also was forced to pull back from its scheme to deport migrants to Albania for asylum processing after a court ruled it illegal on human rights grounds. 
+Still, Europeans have succeeded in other ways: They are paying Turkey almost $7 billion to process migrants so they might enter the European Union legally, rather than attempting to cross into Greece, where many are now detained in camps. 
+As the International Rescue Committee explained, this arrangement was part of the EU’s response to 1 million migrants seeking to enter the bloc in 2015. Most were from war-torn Afghanistan, Iraq, and Syria. Turkey is now forcibly sending many back to their home countries, Politico added. 
+The EU has also created a nearly $6 billion fund to pay Libya and other African countries to hold migrants there rather than letting them take to the Mediterranean Sea to go north, the Guardian reported. 
+Advocates, however, say the conditions are dire for the migrants who get stuck in North Africa. For example, last year, a journalist group forced the EU to admit that its money was allowing African countries to “dump” migrants in the remote parts of the Sahara. 
+Meanwhile, some Africans are not happy with the offshoring plans, saying that the US and other countries are attempting to dump their problems onto African nations and not taking no for an answer.  
+In June, the New York Times reported that the Trump administration had pressured 58 countries, many in Africa, to accept deportees. This “intense diplomatic campaign” targeted nations facing US travel bans, visa restrictions or tariffs, raising concerns that some leaders may comply regardless of whether it serves their country’s interests. 
+The US’ approach reflects a troubling perception of Africa as a “dumping ground” for foreign nationals convicted of violent crimes, said Al Jazeera, creating anger on the continent. Analyst Chris Ogunmodede told the news outlet that countries like South Sudan and Eswatini, with no geopolitical heft, can easily be bullied into compliance by larger nations.  
+Analysts say this campaign has deep repercussions for Africa.  
+“The deportations have deepened public distrust in host country governments. Secrecy surrounding the deals exacerbates instability in both (Eswatini and South Sudan), which are already burdened by violence, instability, and crackdowns on pro-democracy movements,” wrote the Institute for Security Studies. “Many citizens believe the US has used aid and trade to pressure South Sudan and Eswatini into compliance and gain favor with the Trump administration, triggering fears over what was promised in exchange.” 
+At least one country has said no.  
+Regional heavyweight Nigeria was asked by the US to take Venezuelan deportees, some straight out of prison, according to Nigerian Foreign Minister Yusuf Tuggar. The country turned down the request. 
+“The US is mounting considerable pressure on African countries to accept (deportees),” he said, speaking on a Nigerian talk show. “For crying out loud, we already have 230 million people, the very same people that would castigate us if we accepted (the deportees).” 
+Meanwhile, he added, “We have enough problems of our own.” """
+
+class Summarizer:
+    def __init__(self, model_name: str):
+        """
+        Initialize summarizer with a provider.
+        Supported providers: "gemini" (uses gemini-2.0-flash), "groq" (uses deepseek-r1-distill-llama-70b)
+        """
+        self.model_name = model_name
+        if "groq" in model_name.lower():
+            self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+            self.model_name = "deepseek-r1-distill-llama-70b"
+        elif "gemini" in model_name.lower():
+            genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+            self.model_name = "gemini-2.0-flash"
+        else:
+            raise ValueError("Invalid provider. Use 'gemini' or 'groq'.")
+    
+    def summarize(self, article: str) -> str:
+        """
+        Generates a concise summary of the provided text
+        using the selected LLM provider.
+        """
+        time.sleep(1)  # simple rate limiting
+
+        if self.model_name == "gemini-2.0-flash":
+            return self.summarize_with_gemini(article)
+        elif self.model_name == "deepseek-r1-distill-llama-70b":
+            return self.summarize_with_groq(article)
+        else:
+            raise ValueError("Invalid provider. Use 'gemini-2.0-flash' or 'deepseek-r1-distill-llama-70b'.")
+    
+    def summarize_with_gemini(self, article: str) -> str:
+        try:
+            model = genai.GenerativeModel(self.model_name)
+            prompt = f"Summarize the following text concisely in 3-4 sentences:\n\n{article}"
+            response = model.generate_content(prompt)
+            return response.text
+        except exceptions.ResourceExhausted:
+            return "Error: API rate limit exceeded. Please try again later."
+        except exceptions.GoogleAPIError as e:
+            return f"Error: Google API error occurred. Details: {e}"
+        except Exception as e:
+            return f"Error: An unexpected error occurred. Details: {e}"
+    
+    def summarize_with_groq(self, article: str) -> str:
+        try:
+            prompt_messages = [
+                {"role": "system", "content": "You are a helpful assistant that provides concise summaries."},
+                {"role": "user", "content": f"Summarize the following text in 3-4 sentences:\n\n{article}"}
+            ]
+            completion = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=prompt_messages,
+                temperature=0.6,
+                max_completion_tokens=4096,
+                top_p=0.95,
+                stream=False,
+                stop=None
+            )
+            return completion.choices[0].message.content
+        except Exception as e:
+            return f"Error: Groq API error. Details: {e}"
+    
+    def ask_question(self, question: str, article: str) -> str:
+        """
+        Answers a question based on the provided article using the selected LLM provider.
+        """
+        time.sleep(1)  # simple rate limiting
+
+        if self.model_name == "gemini-2.0-flash":
+            return self.ask_with_gemini(question, article)
+        elif self.model_name == "deepseek-r1-distill-llama-70b":
+            return self.ask_with_groq(question, article)
+        else:
+            raise ValueError("Invalid provider. Use 'gemini-2.0-flash' or 'deepseek-r1-distill-llama-70b'.")
+    
+    def ask_with_gemini(self, question: str, article: str) -> str:
+        try:
+            model = genai.GenerativeModel(self.model_name)
+            prompt = f"Based on the article below, {question}? Article: {article}"
+            response = model.generate_content(prompt)
+            return response.text
+        except exceptions.ResourceExhausted:
+            return "Error: API rate limit exceeded. Please try again later."
+        except exceptions.GoogleAPIError as e:
+            return f"Error: Google API error occurred. Details: {e}"
+        except Exception as e:
+            return f"Error: An unexpected error occurred. Details: {e}"
+    
+    def ask_with_groq(self, question: str, article: str) -> str:
+        try:
+            prompt_messages = [
+                {"role": "system", "content": "You are a helpful assistant that answers questions based on the provided article."},
+                {"role": "user", "content": f"Based on the article below, {question}? Article: {article}"}
+            ]
+            completion = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=prompt_messages,
+                temperature=1.0,
+                max_completion_tokens=4096,
+                top_p=0.95,
+                stream=False,
+                stop=None
+            )
+            return completion.choices[0].message.content
+        except Exception as e:
+            return f"Error: Groq API error. Details: {e}"
+
+def main():
+    summarizer = Summarizer("groq")  # Choose your model: 'gemini-2.0-flash' or 'deepseek-r1-distill-llama-70b'
+    summary = summarizer.summarize(article)
+    word_count = len(article.split())
+    word_count_summary = len(summary.split())
+    print(f"Original article length: {word_count} words")
+    print(f"Summary:\n{summary}")
+    print(f"Summary length: {word_count_summary} words")
+    
+    print("\nNow you can ask questions about the article. Type 'quit' to exit.")
+    question_count = 0
+    while question_count < 3:
+        question = input(f"Question {question_count + 1}: ").strip()
+        if question.lower() == 'quit':
+            break
+        if question:
+            answer = summarizer.ask_question(question, article)
+            print(f"Question: {question}")
+            print(f"Answer: {answer}\n")
+            question_count += 1
+        else:
+            print("Please enter a valid question.")
+    
+    if question_count >= 3:
+        print("You have asked at least 3 questions. Exiting Q&A.")
+
+if __name__ == "__main__":
+    main()
