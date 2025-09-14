@@ -1,8 +1,5 @@
 # API Usage
 
-## Project Link
-/teamspace/studios/this_studio/buildables/week4_project/project
-
 ## Description
 This project demonstrates the usage of APIs for text summarization and interactive Q&A using Groq and Gemini APIs.
 
