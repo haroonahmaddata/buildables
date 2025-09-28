@@ -30,31 +30,24 @@ graph LR
 - Google Gemini API key
 - Tavily Search API key
 
-### Installation
-
-1. **Navigate to the project:**
-   ```bash
-   cd /teamspace/studios/this_studio/buildables/week5_project/project
-   ```
-
-2. **Install dependencies:**
+1. **Install dependencies:**
    ```bash
    uv sync
    ```
 
-3. **Set up environment variables:**
+2. **Set up environment variables:**
    Ensure your `.env` file contains:
    ```
    GOOGLE_API_KEY=your_gemini_api_key
    TAVILY_API_KEY=your_tavily_api_key
    ```
 
-4. **Run the application:**
+3. **Run the application:**
    ```bash
    streamlit run app.py
    ```
 
-5. **Open your browser:**
+4. **Open your browser:**
    Navigate to `http://localhost:8501`
 
 ## 📁 Project Structure
@@ -205,7 +198,5 @@ This project is for educational and demonstration purposes. Please ensure compli
 - **LangChain**: For LLM integration and orchestration tools
 
 ---
-
-**Built with ❤️ using cutting-edge multi-agent AI workflows**
 
 *Ready to transform your content creation process? Start generating professional Medium articles in minutes!*
