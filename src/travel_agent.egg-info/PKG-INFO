@@ -1,0 +1,38 @@
+Metadata-Version: 2.4
+Name: travel-agent
+Version: 0.1.0
+Summary: Minimal FastAPI app derived from shtabi-backend
+Author: Shtabi Team
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.115.0
+Requires-Dist: uvicorn[standard]>=0.30.0
+Requires-Dist: langchain>=1.0.4
+Requires-Dist: langchain-openai>=1.0.2
+Requires-Dist: langchain-mcp-adapters>=0.1.0
+Requires-Dist: fastmcp[langchain]>=2.13.0.2
+Requires-Dist: pydantic-settings>=2.0.0
+Requires-Dist: httpx>=0.28.0
+Requires-Dist: openai>=1.51.0
+Requires-Dist: groq>=0.5.0
+Requires-Dist: tavily-python>=0.7.10
+Requires-Dist: python-dotenv>=1.0.1
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: httpx>=0.27; extra == "dev"
+
+# Travel Agent
+
+FastAPI backend derived from the `shtabi-backend` project. It exposes a
+single `/health` endpoint and can be served with Uvicorn.
+
+## Quick start
+
+```bash
+uv venv --python 3.12
+source .venv/bin/activate
+uv pip install -e .
+uvicorn --app-dir src travel_agent.main:app --reload
+```
+
+Then visit <http://localhost:8000/health>.
